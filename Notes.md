@@ -9,11 +9,15 @@ ICC1-BritEdge-assignment-2026
   - [Terraform Tutorial](https://www.youtube.com/watch?v=YcJ9IeukJL8)
   - [Iac & DevOps](https://www.youtube.com/watch?v=9GXKjDJNB9s)
   - [Terraform Docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/)
-## Terraform Phases:
+  - [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
+
+## Terraform:
 Create Terraform configuration 
-- Main.tf
+- main.tf - Top level resources/configuration
+- provider.tf - telling terraform which cloud service I'm using 
 - Variables file
-- Ouputs file
+- Ouputs file -  Printing the output of what we've created after it has been created
+- Subfiles for each resource for modularisation (Keeping code clean) and to easily keep track resources
 
 
 ### ARG - Azure Resource Graph
@@ -21,15 +25,16 @@ Create Terraform configuration
 
 ### GitHub Actions for CICD
 Terraform creates the Azure infrastructure:
-- Resource Group
+- Resource Group/s
 - Web App
 - Database
-- Storage, etc.
+- Storage
+- Containers, etc
 
 GitHub Actions deploys the application code:
-- Detects a push to GitHub
+- Detects a push/commit/PR to GitHub
 - Builds the application
-- Deploys it to the specific Azure Web App
+- Deploys it to the specific resource
 
 Flow:
 
@@ -40,14 +45,50 @@ GitHub Repo -> GitHub Actions -> Deploy Code → Azure Web App
 Terraform creates the environment; GitHub Actions puts the code into it.
 
 ## Azure Services to use:
-Containers, Kubernetes?
+1 Azure Container App running the Flask application
 
-"listOfAllowedLocations": {
-        "value": [
-          "germanywestcentral",
-          "uaenorth",
-          "polandcentral",
-          "italynorth",
-          "spaincentral"
-        ]
-      }
+1 Azure Container Registry storing the Docker image
+
+1 Azure Cosmos DB Account for NoSQL data
+
+1 Cosmos DB Database and Container for storing jobs/users
+
+1 Resource Group organising the entire solution
+
+#### listOfAllowedLocations for resources
+  ` "value": [
+    "germanywestcentral",
+    "uaenorth",
+    "polandcentral",
+    "italynorth",
+    "spaincentral"
+  ]`
+      
+
+## Cost optimisation and Other Solutions
+[Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
+After creating resources: check the real cost. Once the resources are deployed, Azure can show the actual cost and usage.
+
+Go to:
+- Azure Portal → Cost Management + Billing
+- Cost analysis
+- Filter by your Resource Group
+
+Or using Infracost to estimate usage:
+- [Infracost](https://www.infracost.io/docs/) integrates with Infrastructure as Code (IaC) pipelines to help you eliminate cloud waste and budget overruns before and after you deploy.
+- It also checks that your resources are using the correct conventions for names and tags
+- Create New branch for alternative that works but costs more to show the differences.
+
+
+| Service | What you manage |
+|---|---|
+| Static Web Apps | Only static frontend files |
+| Azure Functions | Small pieces of code triggered by events |
+| Logic Apps | Workflows between services |
+| App Service | A full web application |
+| Container Apps | A containerised application |
+| Container Instances | A single container |
+| Kubernetes Service (AKS) | A full container orchestration platform |
+| Spring Apps | Java Spring Boot applications |
+
+
