@@ -40,7 +40,7 @@ jobs:
           registryUrl: britedgejobapp1.azurecr.io
           registryUsername: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
-          containerAppName: britedgejobapp1
+          containerAppName: container-app-britedge
           resourceGroup: BritEdge_DEV_RG
           imageToBuild: britedgejobapp1.azurecr.io/britedgejobapp1:${{ github.sha }}
           _buildArgumentsKey_: |
