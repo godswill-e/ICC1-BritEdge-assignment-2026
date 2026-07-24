@@ -212,4 +212,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Terraform ignores
-/terraform/.terraform
+*.terraform/
+*.tfstate
+*.tfstate.*
