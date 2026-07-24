@@ -5,8 +5,12 @@ __pycache__/
 *.pyd
 *.db
 *.sqlite3
+*.md
 instance/
 .git
 .gitignore
 .DS_Store
 .vscode/
+.github
+terraform/
+icc1-assignment/

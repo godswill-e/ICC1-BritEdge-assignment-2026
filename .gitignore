@@ -210,3 +210,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Terraform ignores
+*.terraform/
+*.tfstate
+*.tfstate.*
