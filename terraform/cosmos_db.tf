@@ -5,10 +5,10 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
   offer_type                 = "Standard"
   kind                       = "MongoDB"
   automatic_failover_enabled = true
-  backup{
-    type = "Periodic"
+  backup {
+    type               = "Periodic"
     storage_redundancy = "Local"
-  }  
+  }
   consistency_policy {
     consistency_level = "Session"
   }

@@ -71,6 +71,18 @@ resource "azurerm_container_app" "container_app" {
     }
   }
 
+  secret {
+    name  = "cosmos-key"
+    value = azurerm_cosmosdb_account.cdb_acc.primary_key
+  }
+  secret {
+    name  = "cosmos-endpoint"
+    value = azurerm_cosmosdb_account.cdb_acc.endpoint
+  }
+  lifecycle {
+    ignore_changes = [template[0].container[0].image]
+  }
+
   ingress {
     external_enabled = true
     target_port      = 8080
@@ -80,15 +92,6 @@ resource "azurerm_container_app" "container_app" {
     }
   }
 
-  # ADD COSMOS VARIABLES HERE
-  secret {
-    name  = "cosmos-key"
-    value = azurerm_cosmosdb_account.cdb_acc.primary_key
-  }
-  secret {
-    name  = "cosmos-endpoint"
-    value = azurerm_cosmosdb_account.cdb_acc.endpoint
-  }
 }
 
 resource "azurerm_role_assignment" "acr_pull" {

@@ -6,3 +6,4 @@ resource "azurerm_resource_group" "web_app_rg" {
     "Service"     = "Web App RG"
   }
 }
+

@@ -92,3 +92,43 @@ Or using Infracost to estimate usage:
 | Spring Apps | Java Spring Boot applications |
 
 
+# Azure Login Fix — GitHub Actions
+To deploy via service principle to Azure student acc via CLI
+
+### Problem
+
+The GitHub Action's `azure/login` step was failing because the service principal Azure's Deployment Center auto-created had no role assignment and no credentials — the wizard created the SP object but silently failed on the next two setup steps.
+
+## Fix
+
+**1. Found the orphaned SP:**
+```bash
+az ad sp list --show-mine -o table
+```
+
+**2. Confirmed it had no roles or credentials:**
+```bash
+az role assignment list --assignee <appId> -o table
+az ad app credential list --id <appId> -o table
+az ad app federated-credential list --id <appId> -o table
+```
+All returned empty.
+
+**3. Assigned it `Contributor` on the resource group:**
+```bash
+az role assignment create \
+  --assignee <appId> \
+  --role Contributor \
+  --scope /subscriptions/<subscriptionId>/resourceGroups/BritEdge_DEV_RG
+```
+
+**4. Generated a client secret:**
+```bash
+az ad app credential reset --id <appId> --append
+```
+
+**5. Built the `AZURE_CREDENTIALS` JSON** from the output (`clientId`, `clientSecret`, `subscriptionId`, `tenantId`), and updated the `CONTAINERAPPBRITEDGE_AZURE_CREDENTIALS` GitHub secret with it.
+
+## Result
+
+The SP now had both the permissions and the credentials it was missing, so `azure/login` could authenticate successfully.
