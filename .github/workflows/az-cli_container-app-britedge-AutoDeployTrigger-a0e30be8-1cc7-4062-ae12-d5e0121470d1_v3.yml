@@ -28,18 +28,18 @@ jobs:
             - name: Docker login to ACR
               uses: azure/docker-login@v1
               with:
-                  login-server: britedgejobapp1.azurecr.io
+                  login-server: BritEdgeRegistry.azurecr.io
                   username: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
                   password: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
 
             - name: Build and push image
               run: |
-                  docker build -t britedgejobapp1.azurecr.io/britedgejobapp1:${{ github.sha }} .
-                  docker push britedgejobapp1.azurecr.io/britedgejobapp1:${{ github.sha }}
+                  docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }} .
+                  docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}
 
             - name: Update Container App image
               run: |
                   az containerapp update \
                     --name container-app-britedge \
                     --resource-group BritEdge_DEV_RG \
-                    --image britedgejobapp1.azurecr.io/britedgejobapp1:${{ github.sha }}
+                    --image BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}

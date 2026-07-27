@@ -132,3 +132,6 @@ az ad app credential reset --id <appId> --append
 ## Result
 
 The SP now had both the permissions and the credentials it was missing, so `azure/login` could authenticate successfully.
+
+
+Deploying using my own credentials due to issues with Service principles.

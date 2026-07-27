@@ -24,7 +24,7 @@ resource "azurerm_container_app_environment" "container_env" {
 
 # Georeplication required?
 resource "azurerm_container_registry" "acr" {
-  name                = "britedgejobapp1"
+  name                = "BritEdgeRegistry"
   resource_group_name = azurerm_resource_group.web_app_rg.name
   location            = azurerm_resource_group.web_app_rg.location
   sku                 = "Basic"
@@ -46,17 +46,19 @@ resource "azurerm_container_app" "container_app" {
     "Environment" = "Dev"
     "Service"     = "Container App"
   }
-  registry {
-    server   = azurerm_container_registry.acr.login_server
-    identity = "System"
-  }
+  # registry {
+  #   # server   = azurerm_container_registry.acr.login_server
+  #   server = "mcr.microsoft.com"
+  #   identity = "System"
+  # }
 
-  identity { type = "SystemAssigned" }
+  # identity { type = "SystemAssigned" }
 
   template {
     container {
       name   = "jobshcedule-webapp-container"
-      image  = "${azurerm_container_registry.acr.login_server}/britedgejobapp1:latest"
+      # image  = "${azurerm_container_registry.acr.login_server}/britedgejobapp1:latest"
+      image = "mcr.microsoft.com/k8se/quickstart:latest" # to be replaced by docker img with gh actions 
       cpu    = 0.25
       memory = "0.5Gi"
       env {
@@ -94,8 +96,3 @@ resource "azurerm_container_app" "container_app" {
 
 }
 
-resource "azurerm_role_assignment" "acr_pull" {
-  principal_id         = azurerm_container_app.container_app.identity[0].principal_id
-  role_definition_name = "AcrPull"
-  scope                = azurerm_container_registry.acr.id
-}
