@@ -48,11 +48,9 @@ jobs:
                 resourceGroup: BritEdge_DEV_RG
                 imageToDeploy: britedgeregistry.azurecr.io/britedgejobapp1:${{ github.sha }}
 
-
-
-            - name: Update Container App image
-              run: |
-                  az containerapp update \
-                    --name container-app-britedge \
-                    --resource-group BritEdge_DEV_RG \
-                    --image BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}
+            # - name: Update Container App image
+            #   run: |
+            #       az containerapp update \
+            #         --name container-app-britedge \
+            #         --resource-group BritEdge_DEV_RG \
+            #         --image BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}
