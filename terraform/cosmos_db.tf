@@ -3,7 +3,7 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
   location                   = azurerm_resource_group.web_app_rg.location
   resource_group_name        = azurerm_resource_group.web_app_rg.name
   offer_type                 = "Standard"
-  kind                       = "MongoDB"
+  kind                       = "GlobalDocumentDB"
   automatic_failover_enabled = true
   backup {
     type               = "Periodic"

@@ -34,9 +34,10 @@ jobs:
 
             - name: Build and push image
               run: |
-                  docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }} .
-                  docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}
-
+                  docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:latest .
+                  docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
+            
+            # Creates new container app after image is pushed to ACR
             - name: Update Container App Registry
               uses: azure/container-apps-deploy-action@v2
               with:
@@ -46,11 +47,11 @@ jobs:
                 registryPassword: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
                 containerAppName: container-app-britedge
                 resourceGroup: BritEdge_DEV_RG
-                imageToDeploy: britedgeregistry.azurecr.io/britedgejobapp1:${{ github.sha }}
+                imageToDeploy: britedgeregistry.azurecr.io/britedgejobapp1:latest
 
             # - name: Update Container App image
             #   run: |
             #       az containerapp update \
             #         --name container-app-britedge \
             #         --resource-group BritEdge_DEV_RG \
-            #         --image BritEdgeRegistry.azurecr.io/britedgejobapp1:${{ github.sha }}
+            #         --image BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
