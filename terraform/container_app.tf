@@ -28,7 +28,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = azurerm_resource_group.web_app_rg.name
   location            = azurerm_resource_group.web_app_rg.location
   sku                 = "Basic"
-  admin_enabled       = false
+  admin_enabled       = true
 
   tags = {
     "Environment" = "Dev"
@@ -46,13 +46,8 @@ resource "azurerm_container_app" "container_app" {
     "Environment" = "Dev"
     "Service"     = "Container App"
   }
-  # registry {
-  #   # server   = azurerm_container_registry.acr.login_server
-  #   server = "mcr.microsoft.com"
-  #   identity = "System"
-  # }
 
-  # identity { type = "SystemAssigned" }
+  identity { type = "SystemAssigned"}
 
   template {
     container {
@@ -96,3 +91,8 @@ resource "azurerm_container_app" "container_app" {
 
 }
 
+resource "azurerm_role_assignment" "acr_pull" {
+  principal_id         = azurerm_container_app.container_app.identity[0].principal_id
+  role_definition_name = "AcrPull"
+  scope                = azurerm_container_registry.acr.id
+}
