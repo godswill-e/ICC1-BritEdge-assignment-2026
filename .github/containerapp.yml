@@ -1,9 +1,10 @@
 properties:
+  environmentId: "/subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge"
   configuration:
     ingress:
       external: true
       targetPort: 8080
-    activeRevisionsMode:
+    activeRevisionsMode: Single
 
     secrets:
     - name: cosmos-key
