@@ -8,16 +8,17 @@ properties:
   configuration:
     ingress:
       external: true
+      allowInsecure: false
       targetPort: 8080
     activeRevisionsMode: Single
 
     secrets:
     - name: cosmos-key
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
       identity: system
 
     - name: cosmos-endpoint
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
       identity: system
 
   template:
