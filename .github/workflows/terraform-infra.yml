@@ -1,4 +1,4 @@
-name: Terraform Infra Deployment
+name: Step 1 - Terraform Infra Deployment
 
 on:
     workflow_dispatch:

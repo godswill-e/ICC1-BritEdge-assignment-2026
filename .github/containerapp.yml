@@ -1,0 +1,35 @@
+properties:
+  configuration:
+    ingress:
+      external: true
+      targetPort: 8080
+    activeRevisionsMode:
+
+    secrets:
+    - name: cosmos-key
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
+      identity: system
+
+    - name: cosmos-endpoint
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
+      identity: system
+
+  templates:
+    conatiners:
+      - name: jobschedule-webapp
+        image: britedgeregistry.azurecr.io/britedgejobapp1:latest
+        resources:
+          cpu: 0.25
+          memory: 0.5Gi
+        env:
+          - name: COSMOS-KEY
+            secretRef: cosmos-key
+          - name: COSMOS-ENDPOINT
+            secretRef: cosmos-endpoint
+tags:
+  Environment: Dev
+  Service: Container App
+
+identity:
+  type: SystemAssigned
+
