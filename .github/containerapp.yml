@@ -1,5 +1,10 @@
+location: italynorth
+
+identity:
+  type: SystemAssigned
+
 properties:
-  environmentId: "/subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge"
+  managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
   configuration:
     ingress:
       external: true
@@ -8,29 +13,27 @@ properties:
 
     secrets:
     - name: cosmos-key
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/
       identity: system
 
     - name: cosmos-endpoint
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/
       identity: system
 
-  templates:
-    conatiners:
+  template:
+    containers:
       - name: jobschedule-webapp
         image: britedgeregistry.azurecr.io/britedgejobapp1:latest
         resources:
           cpu: 0.25
           memory: 0.5Gi
         env:
-          - name: COSMOS-KEY
+          - name: COSMOS_KEY
             secretRef: cosmos-key
-          - name: COSMOS-ENDPOINT
+          - name: COSMOS_ENDPOINT
             secretRef: cosmos-endpoint
 tags:
   Environment: Dev
   Service: Container App
 
-identity:
-  type: SystemAssigned
 
