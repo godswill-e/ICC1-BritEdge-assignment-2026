@@ -6,6 +6,9 @@ identity:
 properties:
   managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
   configuration:
+    registries:
+      usernameSecretRef: acr-username
+      passwordSecretRef: acr-password
     ingress:
       external: true
       allowInsecure: false
@@ -19,6 +22,14 @@ properties:
 
     - name: cosmos-endpoint
       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
+      identity: system
+      
+    - name: acr-password
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/75dcc224650440a9b9c588800fcb2e50
+      identity: system
+
+    - name: acr-username
+      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-username/3ab504547df943aaaa4aded133761dc8
       identity: system
 
   template:
