@@ -30,6 +30,10 @@ jobs:
                   docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
             
             # Creates new container app after image is pushed to ACR
+            - name: Install containerapp extension
+              run: |
+                az extension add --name containerapp --upgrade
+
             - name: Deploy Container App 
               uses: azure/container-apps-deploy-action@v2
               with:
