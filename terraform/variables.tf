@@ -2,10 +2,7 @@ variable "location-1" {
   description = "The Azure region for the BritEdge resources, specifically germanywestcentral"
   type        = string
 }
-# variable "location-2" {
-#   description = "The Azure region for the BritEdge resources, specifically spaincentral"
-#   type        = string
-# }
+
 variable "location-2" {
   description = "The Azure region for the BritEdge resources, specifically italynorth"
   type        = string
@@ -13,10 +10,5 @@ variable "location-2" {
 
 variable "wa_resource_group_name" {
   description = "The name of the Resource Group"
-  type        = string
-}
-
-variable "wa_storage_account_name" {
-  description = "The name for the BritEdge Web App storage account"
   type        = string
 }

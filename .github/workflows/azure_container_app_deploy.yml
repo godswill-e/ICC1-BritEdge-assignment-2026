@@ -1,6 +1,5 @@
 name: Step 2 - Push and Deploy Image to Container App
 
-# When this action will be executed
 on:
     workflow_dispatch:
 
@@ -23,6 +22,7 @@ jobs:
                   login-server: BritEdgeRegistry.azurecr.io
                   username: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
                   password: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
+
             - name: Inject secrets into containerapp.yml
               run: |
                 sed -i "s|__ACR_PASSWORD__|${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}|g" .github/containerapp.yml
@@ -33,9 +33,10 @@ jobs:
               run: |
                   docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:latest .
                   docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
-            - name: Debug - show containerapp.yml
-              run: grep -A1 "acr-password" .github/containerapp.yml
-            # Creates new container app after image is pushed to ACR
+
+            # - name: Debug - show containerapp.yml
+            #   run: grep -A1 "acr-password" .github/containerapp.yml
+
             - name: Install containerapp extension
               run: |
                 az extension add --name containerapp --upgrade
