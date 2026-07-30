@@ -1,51 +1,61 @@
+name: container-app-britedge
+resourceGroup: BritEdge_DEV_RG
 location: italynorth
-
 identity:
-  type: SystemAssigned
+    type: userAssigned
+    userAssignedIdentities:
+      "/subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity": {}
+kind: containerapps
 
 properties:
-  managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
-  configuration:
-    registries:
-      usernameSecretRef: acr-username
-      passwordSecretRef: acr-password
-    ingress:
-      external: true
-      allowInsecure: false
-      targetPort: 8080
-    activeRevisionsMode: Single
+    managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
+    configuration:
+        registries:
+            - identity: ""
+              server: britedgeregistry.azurecr.io
+              username: BritEdgeRegistry
+              password: __ACR_PASSWORD__
+        ingress:
+            external: true
+            allowInsecure: false
+            targetPort: 8080
+        activeRevisionsMode: Single
 
-    secrets:
-    - name: cosmos-key
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
-      identity: system
+        # secrets:
+        #     - name: cosmos-key
+        #       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
+        #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
 
-    - name: cosmos-endpoint
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
-      identity: system
-      
-    - name: acr-password
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/75dcc224650440a9b9c588800fcb2e50
-      identity: system
+        #     - name: cosmos-endpoint
+        #       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/939cc0f3d2874b8f87c92e43d3f26620
+        #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
+        #       identity: system
 
-    - name: acr-username
-      keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-username/3ab504547df943aaaa4aded133761dc8
-      identity: system
+        #     - name: acr-password
+        #       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/75dcc224650440a9b9c588800fcb2e50
+        #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
+        #       identity: system
 
-  template:
-    containers:
-      - name: jobschedule-webapp
-        image: britedgeregistry.azurecr.io/britedgejobapp1:latest
-        resources:
-          cpu: 0.25
-          memory: 0.5Gi
-        env:
-          - name: COSMOS_KEY
-            secretRef: cosmos-key
-          - name: COSMOS_ENDPOINT
-            secretRef: cosmos-endpoint
+    template:
+        containers:
+            - name: jobschedule-webapp
+              image: britedgeregistry.azurecr.io/britedgejobapp1:latest
+              imageType: ContainerImage
+              resources:
+                  cpu: 0.25
+                  memory: 0.5Gi
+              env:
+                  - name: COSMOS_KEY
+                    value: __COSMOS_KEY__
+                  - name: COSMOS_ENDPOINT
+                    value: __COSMOS_ENDPOINT__
 tags:
-  Environment: Dev
-  Service: Container App
+    Environment: Dev
+    Service: Container App
+
+type: Microsoft.App/containerApps
+
+# az containerapp create -n container-app-britedge -g BritEdge_DEV_RG --yaml .github/containerapp.yml
 
 
+# az keyvault set-policy --name britedge-keyvault-gg --object-id ae3d9580-e058-4d78-8fa9-639964dfae7d --secret-permissions get list

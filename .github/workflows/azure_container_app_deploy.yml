@@ -23,6 +23,11 @@ jobs:
                   login-server: BritEdgeRegistry.azurecr.io
                   username: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
                   password: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
+            - name: Inject secrets into containerapp.yml
+              run: |
+                sed -i "s|__ACR_PASSWORD__|${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}|g" .github/containerapp.yml
+                sed -i "s|__COSMOS_KEY__|${{ secrets.COSMOS_KEY }}|g" .github/containerapp.yml
+                sed -i "s|__COSMOS_ENDPOINT__|${{ secrets.COSMOS_ENDPOINT }}|g" .github/containerapp.yml
 
             - name: Build and push image to ACR
               run: |
@@ -38,14 +43,8 @@ jobs:
               uses: azure/container-apps-deploy-action@v2
               with:
                 appSourcePath: .
-                # ACR
-                registryUrl: britedgeregistry.azurecr.io
-                registryUsername: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
-                registryPassword: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
-                # Container App
-                containerAppName: container-app-britedge
                 resourceGroup: BritEdge_DEV_RG
-                imageToDeploy: 
+                imageToDeploy: BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
                 #YAML for extra configs
                 yamlConfigPath: .github/containerapp.yml
 

@@ -215,3 +215,6 @@ __marimo__/
 *.terraform/
 *.tfstate
 *.tfstate.*
+
+# Unwanted files/folders
+/test

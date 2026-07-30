@@ -1,4 +1,9 @@
 data "azurerm_client_config" "current" {}
+resource "azurerm_user_assigned_identity" "container_identity" {
+  name = "container-user-identity"
+  location = var.location-2
+  resource_group_name = var.wa_resource_group_name
+}
 
 resource "azurerm_key_vault" "britedge_kv" {
   name                = "britedge-keyvault-gg"
@@ -36,3 +41,34 @@ resource "azurerm_key_vault" "britedge_kv" {
     "Resource"    = "Web App Key Vault"
   }
 }
+
+resource "azurerm_key_vault_access_policy" "container_identity" {
+  key_vault_id = azurerm_key_vault.britedge_kv.id
+
+  tenant_id = azurerm_user_assigned_identity.container_identity.tenant_id
+  object_id = azurerm_user_assigned_identity.container_identity.principal_id
+
+    key_permissions = [
+      "Get",
+      "Create",
+      "List"
+    ]
+
+    secret_permissions = [
+      "Get",
+      "Set",
+      "List"
+    ]
+
+    storage_permissions = [
+      "Get",
+      "Delete",
+      "List",
+      "Update"
+    ]
+}
+
+# resource "azurerm_role_assignment" "container_identity_assignment" {
+#   principal_id = azurerm_user_assigned_identity.container_identity.principal_id
+#   scope = 
+# }

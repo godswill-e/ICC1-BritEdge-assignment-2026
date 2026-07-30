@@ -5,3 +5,7 @@ output "resource_group_name" {
 output "container_env_id" {
   value = azurerm_container_app_environment.container_env.id
 }
+
+output "assigned_identity"{
+  value = azurerm_user_assigned_identity.container_identity.id
+}
