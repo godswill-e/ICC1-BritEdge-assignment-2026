@@ -2,9 +2,9 @@ name: container-app-britedge
 resourceGroup: BritEdge_DEV_RG
 location: italynorth
 identity:
-    type: userAssigned
-    userAssignedIdentities:
-      "/subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity": {}
+    type: SystemAssigned
+    # userAssignedIdentities:
+    #   "/subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity": {}
 kind: containerapps
 
 properties:
