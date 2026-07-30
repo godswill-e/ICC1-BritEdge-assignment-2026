@@ -10,18 +10,18 @@ kind: containerapps
 properties:
     managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
     configuration:
-        # registries:
-        #     - identity: ""
-        #       server: britedgeregistry.azurecr.io
-        #       username: BritEdgeRegistry
-        #       password: __ACR_PASSWORD__
+        registries:
+            - identity: ""
+              server: britedgeregistry.azurecr.io
+              username: BritEdgeRegistry
+              passwordSecretRef: acr-password
         ingress:
             external: true
             allowInsecure: false
             targetPort: 8080
         activeRevisionsMode: Single
 
-        # secrets:
+        secrets:
         #     - name: cosmos-key
         #       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/5ef361b12f1b4deb930d5389e8673093
         #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
@@ -31,10 +31,11 @@ properties:
         #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
         #       identity: system
 
-        #     - name: acr-password
-        #       keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/75dcc224650440a9b9c588800fcb2e50
-        #       identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
-        #       identity: system
+            - name: acr-password
+              value: __ACR_PASSWORD__
+              # keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/75dcc224650440a9b9c588800fcb2e50
+              # identity: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourcegroups/BritEdge_DEV_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/container-user-identity
+              # identity: system
 
     template:
         containers:
