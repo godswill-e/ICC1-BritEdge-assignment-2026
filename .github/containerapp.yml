@@ -10,11 +10,11 @@ kind: containerapps
 properties:
     managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
     configuration:
-        registries:
-            - identity: ""
-              server: britedgeregistry.azurecr.io
-              username: BritEdgeRegistry
-              password: __ACR_PASSWORD__
+        # registries:
+        #     - identity: ""
+        #       server: britedgeregistry.azurecr.io
+        #       username: BritEdgeRegistry
+        #       password: __ACR_PASSWORD__
         ingress:
             external: true
             allowInsecure: false
