@@ -44,6 +44,7 @@ jobs:
             - name: Deploy Container App 
               uses: azure/container-apps-deploy-action@v2
               with:
+                containerAppName: jobschedule-webapp
                 resourceGroup: BritEdge_DEV_RG
                 yamlConfigPath: .github/containerapp.yml
 
