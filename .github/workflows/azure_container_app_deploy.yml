@@ -34,7 +34,7 @@ jobs:
                   docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:latest .
                   docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
             - name: Debug - show containerapp.yml
-              run: cat .github/containerapp.yml
+              run: grep -A1 "acr-password" .github/containerapp.yml
             # Creates new container app after image is pushed to ACR
             - name: Install containerapp extension
               run: |
