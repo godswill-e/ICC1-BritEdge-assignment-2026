@@ -33,7 +33,8 @@ jobs:
               run: |
                   docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:latest .
                   docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
-            
+            - name: Debug - show containerapp.yml
+              run: cat .github/containerapp.yml
             # Creates new container app after image is pushed to ACR
             - name: Install containerapp extension
               run: |
@@ -42,12 +43,7 @@ jobs:
             - name: Deploy Container App 
               uses: azure/container-apps-deploy-action@v2
               with:
-                appSourcePath: .
                 resourceGroup: BritEdge_DEV_RG
-                imageToDeploy: BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
-                registryUsername: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
-                registryPassword: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
-                #YAML for extra configs
                 yamlConfigPath: .github/containerapp.yml
 
 

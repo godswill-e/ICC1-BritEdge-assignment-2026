@@ -11,14 +11,14 @@ properties:
     managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
     configuration:
         registries:
-            - identity: ""
-              server: britedgeregistry.azurecr.io
-              username: BritEdgeRegistry
-              passwordSecretRef: acr-password
+        - identity: ""
+          server: britedgeregistry.azurecr.io
+          username: BritEdgeRegistry
+          passwordSecretRef: acr-password
         ingress:
-            external: true
-            allowInsecure: false
-            targetPort: 8080
+          external: true
+          allowInsecure: false
+          targetPort: 8080
         activeRevisionsMode: Single
 
         secrets:
@@ -55,8 +55,3 @@ tags:
     Service: Container App
 
 type: Microsoft.App/containerApps
-
-# az containerapp create -n container-app-britedge -g BritEdge_DEV_RG --yaml .github/containerapp.yml
-
-
-# az keyvault set-policy --name britedge-keyvault-gg --object-id ae3d9580-e058-4d78-8fa9-639964dfae7d --secret-permissions get list
