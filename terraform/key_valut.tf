@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_user_assigned_identity" "container_identity" {
   name = "container-user-identity"
   location = var.location-2
-  resource_group_name = var.wa_resource_group_name
+  resource_group_name = azurerm_resource_group.web_app_rg
 }
 
 resource "azurerm_key_vault" "britedge_kv" {
