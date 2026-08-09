@@ -1,4 +1,4 @@
-name: container-app-britedge
+name: jobschedule-container-app-britedge
 resourceGroup: BritEdge_DEV_RG
 location: italynorth
 identity:
