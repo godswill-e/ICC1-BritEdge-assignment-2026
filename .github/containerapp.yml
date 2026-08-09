@@ -23,13 +23,13 @@ properties:
 
         secrets:
             - name: acr-password
-              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password
               identity: __CONTAINER_IDENTITY_ID
             - name: cosmos-key
-              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key
               identity: __CONTAINER_IDENTITY_ID
             - name: cosmos-enpoint
-              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint
               identity: __CONTAINER_IDENTITY_ID
 
     template:
