@@ -36,16 +36,17 @@ jobs:
               run: |
                 if ! az containerapp show -n jobschedule-app-britedge -g BritEdge_DEV_RG -o none 2>/dev/null; then
                   echo "Container app not found - creating a bare version first (Container Apps can't resolve Key Vault secrets for an identity in the same call that assigns it)."
+                  IDENTITY_ID=$(az identity show --name container-user-identity --resource-group BritEdge_DEV_RG --query id -o tsv)
                   az containerapp create -n jobschedule-app-britedge -g BritEdge_DEV_RG \
                     --environment container-app-env-britedge \
                     --image britedgeregistry.azurecr.io/britedgejobapp1:latest \
                     --registry-server britedgeregistry.azurecr.io \
-                    --registry-username "${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}" \
-                    --registry-password "${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}" \
+                    --user-assigned "$IDENTITY_ID" \
+                    --registry-identity "$IDENTITY_ID" \
                     --ingress external --target-port 8080
 
                   az containerapp identity assign -n jobschedule-app-britedge -g BritEdge_DEV_RG \
-                    --user-assigned "$(az identity show --name container-user-identity --resource-group BritEdge_DEV_RG --query id -o tsv)"
+                    --user-assigned "$IDENTITY_ID"
                 else
                   echo "Container app already exists - skipping bootstrap, going straight to the full update below."
                 fi

@@ -11,10 +11,8 @@ properties:
     managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
     configuration:
         registries:
-        - identity: ""
+        - identity: __CONTAINER_IDENTITY_ID
           server: britedgeregistry.azurecr.io
-          username: BritEdgeRegistry
-          passwordSecretRef: acr-password
         ingress:
           external: true
           allowInsecure: false
@@ -22,9 +20,6 @@ properties:
         activeRevisionsMode: Single
 
         secrets:
-            - name: acr-password
-              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password
-              identity: __CONTAINER_IDENTITY_ID
             - name: cosmos-key
               keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key
               identity: __CONTAINER_IDENTITY_ID
@@ -44,7 +39,15 @@ properties:
                   - name: COSMOS_KEY
                     secretRef: cosmos-key
                   - name: COSMOS_ENDPOINT
-                    secretRef: cosmos-enpoint
+                    secretRef: cosmos-endpoint
+        scale:
+            minReplicas: 0
+            maxReplicas: 3
+            rules:
+                - name: http-scale-rule
+                  http:
+                      metadata:
+                          concurrentRequests: "10"
 tags:
     Environment: Dev
     Service: Container App
