@@ -23,19 +23,15 @@ jobs:
                   username: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_USERNAME }}
                   password: ${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}
 
-            - name: Inject secrets into containerapp.yml
+            - name: Resolve identity ID and inject into containerapp.yml
               run: |
-                sed -i "s|__ACR_PASSWORD__|${{ secrets.CONTAINERAPPBRITEDGE_REGISTRY_PASSWORD }}|g" .github/containerapp.yml
-                sed -i "s|__COSMOS_KEY__|${{ secrets.COSMOS_KEY }}|g" .github/containerapp.yml
-                sed -i "s|__COSMOS_ENDPOINT__|${{ secrets.COSMOS_ENDPOINT }}|g" .github/containerapp.yml
+                IDENTITY_ID=$(az identity show --name container-user-identity --resource-group BritEdge_DEV_RG --query id -o tsv)
+                sed -i "s|__CONTAINER_IDENTITY_ID|$IDENTITY_ID|g" .github/containerapp.yml
 
             - name: Build and push image to ACR
               run: |
                   docker build -t BritEdgeRegistry.azurecr.io/britedgejobapp1:latest .
                   docker push BritEdgeRegistry.azurecr.io/britedgejobapp1:latest
-
-            # - name: Debug - show containerapp.yml
-            #   run: grep -A1 "acr-password" .github/containerapp.yml
 
             - name: Install containerapp extension
               run: |
@@ -47,5 +43,3 @@ jobs:
                 containerAppName: jobschedule-webapp
                 resourceGroup: BritEdge_DEV_RG
                 yamlConfigPath: .github/containerapp.yml
-
-

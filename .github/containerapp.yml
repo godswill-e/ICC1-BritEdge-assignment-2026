@@ -2,7 +2,9 @@ name: container-app-britedge
 resourceGroup: BritEdge_DEV_RG
 location: italynorth
 identity:
-    type: SystemAssigned
+    type: UserAssigned
+    userAssignedIdentities:
+      __CONTAINER_IDENTITY_ID: {}
 kind: containerapps
 
 properties:
@@ -21,7 +23,14 @@ properties:
 
         secrets:
             - name: acr-password
-              value: __ACR_PASSWORD__
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/acr-password/
+              identity: __CONTAINER_IDENTITY_ID
+            - name: cosmos-key
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key/
+              identity: __CONTAINER_IDENTITY_ID
+            - name: cosmos-enpoint
+              keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint/
+              identity: __CONTAINER_IDENTITY_ID
 
     template:
         containers:
@@ -33,9 +42,9 @@ properties:
                   memory: 0.5Gi
               env:
                   - name: COSMOS_KEY
-                    value: __COSMOS_KEY__
+                    secretRef: cosmos-key
                   - name: COSMOS_ENDPOINT
-                    value: __COSMOS_ENDPOINT__
+                    secretRef: cosmos-enpoint
 tags:
     Environment: Dev
     Service: Container App
