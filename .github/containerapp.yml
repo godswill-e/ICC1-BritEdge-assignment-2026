@@ -28,7 +28,7 @@ properties:
             - name: cosmos-key
               keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-key
               identity: __CONTAINER_IDENTITY_ID
-            - name: cosmos-enpoint
+            - name: cosmos-endpoint
               keyVaultUrl: https://britedge-keyvault-gg.vault.azure.net/secrets/cosmos-endpoint
               identity: __CONTAINER_IDENTITY_ID
 

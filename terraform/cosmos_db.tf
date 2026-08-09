@@ -12,7 +12,9 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
   consistency_policy {
     consistency_level = "Session"
   }
-
+  capabilities {
+    name = "EnableServerless"
+  }
   geo_location {
     location          = var.location-1
     failover_priority = 0
