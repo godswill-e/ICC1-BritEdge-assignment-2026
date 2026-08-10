@@ -20,9 +20,9 @@ themselves - those are tracked in `script.md`.
 
 - [x] Tighten `container_identity`'s Key Vault access policy from
       `Get, Set, List` down to `Get` only - it only ever reads secrets.
-- [ ] Move ACR pull auth from admin username/password to an `AcrPull` role
+- [ ] ~~Move ACR pull auth from admin username/password to an `AcrPull` role
       assignment for `container_identity`, and drop the ACR admin
-      credentials/secrets entirely.
+      credentials/secrets entirely.~~
 
 ## New resource: Azure Monitor
 
@@ -48,6 +48,7 @@ themselves - those are tracked in `script.md`.
 - [x] Fix the `cosmos-enpoint` typo (container app secret name) to
       `cosmos-endpoint` for consistency with the actual Key Vault secret
       name.
+- [ ] Update architecture diagram to have secrets/keys inside square of keyvault
 
 ## Reliability
 
