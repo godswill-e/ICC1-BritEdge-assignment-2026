@@ -50,20 +50,13 @@ resource "azurerm_key_vault_access_policy" "container_identity" {
 
     key_permissions = [
       "Get",
-      "Create",
-      "List"
     ]
 
     secret_permissions = [
       "Get",
-      "Set",
-      "List"
     ]
 
     storage_permissions = [
       "Get",
-      "Delete",
-      "List",
-      "Update"
     ]
 }
