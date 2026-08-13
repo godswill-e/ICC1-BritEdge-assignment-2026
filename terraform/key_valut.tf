@@ -3,6 +3,11 @@ resource "azurerm_user_assigned_identity" "container_identity" {
   name                = "container-user-identity"
   location            = var.location-2
   resource_group_name = azurerm_resource_group.web_app_rg.name
+
+  tags = {
+    "Environment" = "Dev"
+    "Service"     = "Container Identity"
+  }
 }
 
 resource "azurerm_key_vault" "britedge_kv" {
@@ -38,7 +43,7 @@ resource "azurerm_key_vault" "britedge_kv" {
 
   tags = {
     "Environment" = "Dev"
-    "Resource"    = "Web App Key Vault"
+    "Service"     = "Web App Key Vault"
   }
 }
 

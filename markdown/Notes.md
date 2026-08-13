@@ -27,7 +27,14 @@ demo, architecture diagram, justification, config decisions/challenges, cost
   granted access to Key Vault - no secrets hardcoded anywhere in code or
   workflow files.
 - Observability: Log Analytics workspace wired to the Container App
-  Environment.
+  Environment, plus diagnostic settings forwarding Cosmos DB, Key Vault, and
+  ACR logs/metrics into the same workspace - one central place for
+  everything, not just the app's own console output.
+- Monitoring/alerting: an Azure Monitor metric alert on the Container App
+  (CPU > ~80% of its 0.25 vCPU allocation, `UsageNanoCores`) wired to an
+  action group that emails on trigger - turns the workspace from passive log
+  storage into active monitoring, and counts as a genuinely distinct
+  additional integrated service for the service-selection criterion.
 - [TODO once diagram is drawn: point at each box while explaining]
 
 ## 3. How things move between resources (data/control flow)
@@ -111,8 +118,11 @@ demo, architecture diagram, justification, config decisions/challenges, cost
 - Managed identity access policy scoped to least privilege (read-only on
   secrets, not write) - [TODO: confirm once tightened from Get/Set/List to
   Get only].
-- [TODO: mention if ACR auth gets moved from admin credentials to identity-
-  based AcrPull role]
+- Considered moving ACR pull auth from admin username/password to an
+  identity-based `AcrPull` role assignment for `container_identity` (removes
+  standing admin credentials entirely) - implemented, then reverted; kept
+  admin credentials for now. Worth a one-line mention as a considered-but-
+  not-taken security improvement if there's time in the video.
 - Passwords hashed (werkzeug) before storage, never stored/logged in plain
   text.
 
@@ -143,13 +153,45 @@ demo, architecture diagram, justification, config decisions/challenges, cost
   set up cleanly via the auto-created Deployment Center wizard (no role
   assignment/credentials) - fixed by manually assigning `Contributor` and
   generating credentials via `az ad app credential reset`.
+- **Azure student account limitations (again) - Action Group test
+  notifications don't work on Free/Student subscriptions**: both the Portal
+  "Test action group" button and the equivalent `az monitor action-group
+  test-notifications create` CLI command fail with `(Conflict) Free
+  subscription not supported` - a documented Azure restriction on that
+  specific synthetic-test API, not a config problem (the action group and
+  its email receiver are correctly deployed). The restriction only affects
+  the *synthetic* test path - a real alert actually firing still emails
+  normally, so getting proof for the video means genuinely pushing the
+  Container App's CPU over the alert threshold for 5+ minutes, not using
+  the test button.
+- **Log Analytics workspace rename forces recreation**: renaming
+  `azurerm_log_analytics_workspace.log_aw` (moved into `monitoring.tf` and
+  renamed in the process) triggers a destroy-and-recreate, since `name` is
+  immutable on that resource type - wipes any log history collected so far.
+  Worth noting as a "why we didn't just rename resources casually" point if
+  discussing Terraform gotchas.
+- **Remote Terraform backend**: state was local-only (see above, not shared
+  between machines/CI). Fixed by provisioning a dedicated Storage Account +
+  blob container outside of the main Terraform config (chicken-and-egg -
+  can't store state for a resource in a backend that resource itself would
+  create) and pointing `provider.tf`'s `backend "azurerm" {}` block at it,
+  then `terraform init -migrate-state` to move the existing state across.
 
 ## 10. Not yet covered / still to do
 
-- [ ] Draw and insert architecture diagram, walk through it live
+- [ ] Draw and insert architecture diagram, walk through it live - now needs
+      the Azure Monitor / diagnostic settings additions reflected too
 - [ ] Live demo of the deployed app (register, create job, view job)
 - [ ] Final real cost numbers from the Pricing Calculator
 - [ ] Confirm scale rule + Cosmos serverless changes before recording
-- [ ] Decide on and mention any stretch items actually implemented
-      (AcrPull identity-based ACR auth, tightened Key Vault permissions,
-      remote Terraform backend)
+- [x] Remote Terraform backend - done (Storage Account + blob container,
+      `terraform init -migrate-state`)
+- [x] Azure Monitor: diagnostic settings (Cosmos DB, Key Vault, ACR,
+      Container App Environment) + action group + CPU metric alert - done
+- [ ] Capture proof of the alert actually firing/emailing for the video -
+      can't use the Portal/CLI test-notifications feature (Free subscription
+      restriction, see section 9), need to generate real load against the
+      ingress URL for 5+ minutes to cross the CPU threshold for real
+- [ ] Decide on and mention any stretch items actually implemented vs.
+      considered-but-reverted (AcrPull identity-based ACR auth was tried
+      then reverted - decide whether to mention as a "considered" item)

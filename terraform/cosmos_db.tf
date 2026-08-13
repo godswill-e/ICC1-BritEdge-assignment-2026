@@ -4,10 +4,10 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
   resource_group_name        = azurerm_resource_group.web_app_rg.name
   offer_type                 = "Standard"
   kind                       = "GlobalDocumentDB"
-  automatic_failover_enabled = true
+  # automatic_failover_enabled = false
   backup {
     type               = "Periodic"
-    storage_redundancy = "Local"
+    storage_redundancy = "Geo"
   }
   consistency_policy {
     consistency_level = "Session"
@@ -16,10 +16,9 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
     name = "EnableServerless"
   }
   geo_location {
-    location          = var.location-1
+    location          = azurerm_resource_group.web_app_rg.location
     failover_priority = 0
   }
-
 
   tags = {
     "Environment" = "Dev"
@@ -32,7 +31,7 @@ resource "azurerm_key_vault_secret" "cosmos_key" {
   value        = azurerm_cosmosdb_account.cdb_acc.primary_key
   key_vault_id = azurerm_key_vault.britedge_kv.id
   tags = {
-    "Environmenr" = "Dev"
+    "Environment" = "Dev"
     "Service"     = "BritEdge Key-Vault"
     "Type"        = "Secret"
   }
@@ -43,7 +42,7 @@ resource "azurerm_key_vault_secret" "cosmos_enpoint" {
   value        = azurerm_cosmosdb_account.cdb_acc.endpoint
   key_vault_id = azurerm_key_vault.britedge_kv.id
   tags = {
-    "Environmenr" = "Dev"
+    "Environment" = "Dev"
     "Service"     = "BritEdge Key-Vault"
     "Type"        = "Secret"
   }

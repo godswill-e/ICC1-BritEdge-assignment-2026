@@ -48,20 +48,31 @@ themselves - those are tracked in `script.md`.
 - [x] Fix the `cosmos-enpoint` typo (container app secret name) to
       `cosmos-endpoint` for consistency with the actual Key Vault secret
       name.
-- [ ] Update architecture diagram to have secrets/keys inside square of keyvault
+- [ ] Architecture diagram:
+  - [ ] To have secrets/keys inside square of keyvault
+  - [ ] Add Azure monitor, actions, and diagnostic settings
+  - [ ] Update Analytics Workspace
+  - [ ] Locations of resources
 
 ## Reliability
 
-- [ ] Add a remote Terraform backend (Storage Account + container for
+- [x] Add a remote Terraform backend (Storage Account + container for
       `.tfstate`) so state is shared between local runs and CI instead of
       being local-only.
-- [ ] Add more/better redundancy for Cosmos DB and the containers - Cosmos DB
-      currently has a single `geo_location` (no multi-region writes/reads) and
-      the Container App has no minimum replica floor (`minReplicas: 0`), so a
-      cold instance or a regional outage both cost availability. Look at a
-      second `geo_location` block (with `automatic_failover_enabled` already
-      on) for Cosmos DB, and weigh `minReplicas: 1`+ against the
-      cost/scalability tradeoff already logged above.
+- [ ] Add more/better redundancy for Cosmos DB and the containers:
+  - [x] Cosmos DB multi-region `geo_location` - investigated, ruled out:
+        serverless accounts are hard-restricted to a single region, no
+        workaround short of giving up serverless (reverses the earlier cost
+        decision). Not worth it for this workload.
+  - [x] Cosmos DB backup redundancy - changed `backup.storage_redundancy`
+        from `Local` to `Geo` in `cosmos_db.tf` (in-place update, confirmed
+        via `terraform plan`, no data loss). Backups now survive a regional
+        outage even though live data doesn't fail over; restore is still a
+        Microsoft support request, not self-service (would need to migrate
+        to Continuous backup mode for that - considered a stretch item, one-
+        way migration, not done).
+  - [ ] Container App redundancy/failover - no minimum replica floor
+        (`minReplicas: 0`) and the environment isn't zone-redundant. Next up.
 
 ## Before recording anything
 
