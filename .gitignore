@@ -217,4 +217,4 @@ __marimo__/
 *.tfstate.*
 
 # Unwanted files/folders
-/test
+*/test.*

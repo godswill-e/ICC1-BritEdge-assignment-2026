@@ -1,14 +1,4 @@
-resource "azurerm_log_analytics_workspace" "log_aw" {
-  name                = "log-aw-aca-britedge"
-  location            = azurerm_resource_group.web_app_rg.location
-  resource_group_name = azurerm_resource_group.web_app_rg.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
-  tags = {
-    "Environment" = "Dev"
-    "Service"     = "Web App LAW"
-  }
-}
+
 
 resource "azurerm_container_app_environment" "container_env" {
   name                       = "container-app-env-britedge"
@@ -37,23 +27,23 @@ resource "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_key_vault_secret" "registry_username" {
-  name = "acr-username"
-  value = azurerm_container_registry.acr.admin_username
+  name         = "acr-username"
+  value        = azurerm_container_registry.acr.admin_username
   key_vault_id = azurerm_key_vault.britedge_kv.id
-    tags = { 
+  tags = {
     "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
+    "Service"     = "BritEdge Key-Vault"
+    "Type"        = "Secret"
   }
 }
 
 resource "azurerm_key_vault_secret" "registry_password" {
-  name = "acr-password"
-  value = azurerm_container_registry.acr.admin_password
+  name         = "acr-password"
+  value        = azurerm_container_registry.acr.admin_password
   key_vault_id = azurerm_key_vault.britedge_kv.id
-  tags = { 
+  tags = {
     "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
+    "Service"     = "BritEdge Key-Vault"
+    "Type"        = "Secret"
   }
 }

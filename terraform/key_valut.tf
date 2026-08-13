@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 resource "azurerm_user_assigned_identity" "container_identity" {
-  name = "container-user-identity"
-  location = var.location-2
+  name                = "container-user-identity"
+  location            = var.location-2
   resource_group_name = azurerm_resource_group.web_app_rg.name
 }
 
@@ -48,15 +48,15 @@ resource "azurerm_key_vault_access_policy" "container_identity" {
   tenant_id = azurerm_user_assigned_identity.container_identity.tenant_id
   object_id = azurerm_user_assigned_identity.container_identity.principal_id
 
-    key_permissions = [
-      "Get",
-    ]
+  key_permissions = [
+    "Get",
+  ]
 
-    secret_permissions = [
-      "Get",
-    ]
+  secret_permissions = [
+    "Get",
+  ]
 
-    storage_permissions = [
-      "Get",
-    ]
+  storage_permissions = [
+    "Get",
+  ]
 }

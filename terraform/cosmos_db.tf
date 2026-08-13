@@ -28,24 +28,24 @@ resource "azurerm_cosmosdb_account" "cdb_acc" {
 }
 
 resource "azurerm_key_vault_secret" "cosmos_key" {
-  name = "cosmos-key"
-  value = azurerm_cosmosdb_account.cdb_acc.primary_key
+  name         = "cosmos-key"
+  value        = azurerm_cosmosdb_account.cdb_acc.primary_key
   key_vault_id = azurerm_key_vault.britedge_kv.id
-  tags = { 
+  tags = {
     "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
+    "Service"     = "BritEdge Key-Vault"
+    "Type"        = "Secret"
   }
 }
 
 resource "azurerm_key_vault_secret" "cosmos_enpoint" {
-  name = "cosmos-endpoint"
-  value = azurerm_cosmosdb_account.cdb_acc.endpoint
+  name         = "cosmos-endpoint"
+  value        = azurerm_cosmosdb_account.cdb_acc.endpoint
   key_vault_id = azurerm_key_vault.britedge_kv.id
-  tags = { 
+  tags = {
     "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
+    "Service"     = "BritEdge Key-Vault"
+    "Type"        = "Secret"
   }
 }
 

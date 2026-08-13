@@ -9,7 +9,7 @@ themselves - those are tracked in `script.md`.
 - [x] Switch Cosmos DB to serverless capacity mode (`capabilities { name =
       "EnableServerless" }` in `cosmos_db.tf`) - currently provisioned
       throughput, billed ~400 RU/s minimum 24/7 regardless of traffic.
-- [ ] Add an explicit `scale:` block to `containerapp.yml` (min/max
+- [x] Add an explicit `scale:` block to `containerapp.yml` (min/max
       replicas + HTTP concurrency rule) - currently relying on undeclared
       defaults (`minReplicas: null`, `rules: null`), not demonstrable as an
       intentional decision.
@@ -32,10 +32,10 @@ themselves - those are tracked in `script.md`.
       passive logging into active monitoring, and is a genuinely distinct
       additional integrated service for the rubric's service-selection
       criterion.
-- [ ] Decide whether to also wire up Application Insights for app-level
+- [ ] ~~Decide whether to also wire up Application Insights for app-level
       request/dependency tracing, or keep it to infra-level alerts only -
       infra-level is enough for the "distinct service" count, App Insights
-      is a stretch item if there's time.
+      is a stretch item if there's time.~~
 - [ ] Mention this in `script.md` section 2 (architecture overview) and
       section 5 (new IT technician angle - proactive alerting vs. the old
       setup where nobody would know something broke until a user reported
@@ -55,6 +55,13 @@ themselves - those are tracked in `script.md`.
 - [ ] Add a remote Terraform backend (Storage Account + container for
       `.tfstate`) so state is shared between local runs and CI instead of
       being local-only.
+- [ ] Add more/better redundancy for Cosmos DB and the containers - Cosmos DB
+      currently has a single `geo_location` (no multi-region writes/reads) and
+      the Container App has no minimum replica floor (`minReplicas: 0`), so a
+      cold instance or a regional outage both cost availability. Look at a
+      second `geo_location` block (with `automatic_failover_enabled` already
+      on) for Cosmos DB, and weigh `minReplicas: 1`+ against the
+      cost/scalability tradeoff already logged above.
 
 ## Before recording anything
 
