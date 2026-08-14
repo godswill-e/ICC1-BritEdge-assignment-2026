@@ -47,7 +47,7 @@ properties:
                     secretRef: cosmos-endpoint
         scale:
           minReplicas: 3
-          maxReplicas: 3
+          maxReplicas: 6
           rules:
           - name: httpscalingrule
             custom:
