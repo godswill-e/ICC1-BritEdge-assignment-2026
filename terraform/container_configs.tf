@@ -36,24 +36,8 @@ resource "azurerm_container_registry" "acr" {
   }
 }
 
-resource "azurerm_key_vault_secret" "registry_username" {
-  name = "acr-username"
-  value = azurerm_container_registry.acr.admin_username
-  key_vault_id = azurerm_key_vault.britedge_kv.id
-    tags = { 
-    "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
-  }
-}
-
-resource "azurerm_key_vault_secret" "registry_password" {
-  name = "acr-password"
-  value = azurerm_container_registry.acr.admin_password
-  key_vault_id = azurerm_key_vault.britedge_kv.id
-  tags = { 
-    "Environmenr" = "Dev"
-    "Service" = "BritEdge Key-Vault"
-    "Type" = "Secret"
-  }
+resource "azurerm_role_assignment" "acr_pull" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id          = azurerm_user_assigned_identity.container_identity.principal_id
 }
