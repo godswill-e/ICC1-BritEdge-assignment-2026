@@ -4,21 +4,21 @@ location: italynorth
 identity:
     type: UserAssigned
     userAssignedIdentities:
-      __CONTAINER_IDENTITY_ID: {}
+        __CONTAINER_IDENTITY_ID: {}
 kind: containerapps
 
 properties:
     managedEnvironmentId: /subscriptions/1d7f1b24-3cc5-453c-a65e-967a617536b9/resourceGroups/BritEdge_DEV_RG/providers/Microsoft.App/managedEnvironments/container-app-env-britedge
     configuration:
         registries:
-        - identity: ""
-          server: britedgeregistry.azurecr.io
-          username: BritEdgeRegistry
-          passwordSecretRef: acr-password
+            - identity: ""
+              server: britedgeregistry.azurecr.io
+              username: BritEdgeRegistry
+              passwordSecretRef: acr-password
         ingress:
-          external: true
-          allowInsecure: false
-          targetPort: 8080
+            external: true
+            allowInsecure: false
+            targetPort: 8080
         activeRevisionsMode: Single
 
         secrets:
@@ -44,7 +44,16 @@ properties:
                   - name: COSMOS_KEY
                     secretRef: cosmos-key
                   - name: COSMOS_ENDPOINT
-                    secretRef: cosmos-enpoint
+                    secretRef: cosmos-endpoint
+        scale:
+          minReplicas: 2
+          maxReplicas: 3
+          rules:
+          - name: httpscalingrule
+            custom:
+              type: http
+              metadata:
+                concurrentRequests: '20'
 tags:
     Environment: Dev
     Service: Container App
