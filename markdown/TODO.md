@@ -2,7 +2,7 @@
 
 Living checklist - add to this as we go. Ordered roughly by marks-per-effort
 (rubric weight in brackets where relevant). Not the video/diagram
-themselves - those are tracked in `script.md`.
+themselves - those are tracked in `markdown/Notes.md`.
 
 ## Cost & Scalability (10%) - currently the weakest graded area
 
@@ -13,8 +13,12 @@ themselves - those are tracked in `script.md`.
       replicas + HTTP concurrency rule) - currently relying on undeclared
       defaults (`minReplicas: null`, `rules: null`), not demonstrable as an
       intentional decision.
-- [ ] Run a real Azure Pricing Calculator pass with the actual SKUs in use
-      and record the numbers (for `script.md` section 6).
+- [x] Cost pass with actual SKUs in use, recorded in `markdown/COST_ANALYSIS.md` - used
+      Infracost against `terraform/` (~$5/month, mostly ACR) plus manually-priced Container App
+      compute (~$11/month for `minReplicas: 2`) since Infracost can't see non-Terraform-managed
+      compute. ~$16/month total. Used Infracost instead of the official Pricing Calculator since
+      it prices the actual deployed resources directly - cross-check a couple of headline figures
+      against the Pricing Calculator before recording if you want a second source.
 
 ## Security - push Architecture criterion toward Outstanding
 
@@ -26,20 +30,24 @@ themselves - those are tracked in `script.md`.
 
 ## New resource: Azure Monitor
 
-- [ ] Add Azure Monitor alert rule(s) on top of the existing Log Analytics
-      workspace (e.g. `azurerm_monitor_metric_alert` for high CPU/memory,
-      or a scheduled query alert for HTTP 5xx rate) - turns the current
-      passive logging into active monitoring, and is a genuinely distinct
-      additional integrated service for the rubric's service-selection
-      criterion.
+- [x] Add Azure Monitor alert rule(s) on top of the existing Log Analytics
+      workspace - done in `terraform/monitoring.tf`: diagnostic settings
+      (Cosmos DB, Key Vault, ACR, Container App Environment) feeding the
+      workspace, an action group emailing on trigger, and a CPU metric
+      alert (`UsageNanoCores > 80%`) on the Container App. Applied and
+      confirmed live.
 - [ ] ~~Decide whether to also wire up Application Insights for app-level
       request/dependency tracing, or keep it to infra-level alerts only -
       infra-level is enough for the "distinct service" count, App Insights
       is a stretch item if there's time.~~
-- [ ] Mention this in `script.md` section 2 (architecture overview) and
-      section 5 (new IT technician angle - proactive alerting vs. the old
-      setup where nobody would know something broke until a user reported
-      it).
+- [x] Mentioned in `markdown/Notes.md` section 2 (architecture overview)
+      and section 5 (new IT technician angle).
+- [ ] Still need to capture the alert actually firing/emailing for the
+      video - the Portal/CLI synthetic test-notification feature is
+      blocked on this Free/Student subscription (`(Conflict) Free
+      subscription not supported`), so this means generating real load
+      against the ingress URL for 5+ minutes to cross the CPU threshold for
+      real. See `markdown/Notes.md` section 9.
 
 ## Cleanup
 
@@ -59,7 +67,7 @@ themselves - those are tracked in `script.md`.
 - [x] Add a remote Terraform backend (Storage Account + container for
       `.tfstate`) so state is shared between local runs and CI instead of
       being local-only.
-- [ ] Add more/better redundancy for Cosmos DB and the containers:
+- [x] Add more/better redundancy for Cosmos DB and the containers:
   - [x] Cosmos DB multi-region `geo_location` - investigated, ruled out:
         serverless accounts are hard-restricted to a single region, no
         workaround short of giving up serverless (reverses the earlier cost
@@ -71,8 +79,20 @@ themselves - those are tracked in `script.md`.
         Microsoft support request, not self-service (would need to migrate
         to Continuous backup mode for that - considered a stretch item, one-
         way migration, not done).
-  - [ ] Container App redundancy/failover - no minimum replica floor
-        (`minReplicas: 0`) and the environment isn't zone-redundant. Next up.
+  - [x] Container App redundancy/failover - done: added a VNet + delegated
+        subnet (`terraform/networking.tf`), set `infrastructure_subnet_id`
+        + `zone_redundancy_enabled = true` on `container_env`, and bumped
+        `minReplicas` to `2` in `containerapp.yml` so the environment
+        actually spreads replicas across Availability Zones (zone
+        redundancy needs ≥2 replicas to mean anything). Required a manual
+        `az containerapp delete` before `terraform apply` since Azure won't
+        replace an environment that still has apps in it. Costs ~$11/month
+        extra (was $0 at `minReplicas: 0`) - see `markdown/COST_ANALYSIS.md`.
+        Deployed and confirmed working. Note: Azure doesn't expose which
+        zone each replica actually landed in (Portal, CLI, and API all lack
+        this - open upstream feature request), so this can't be visually
+        proven on camera, only the environment's `zoneRedundant: true`
+        setting and the running replica count can be shown.
 
 ## Before recording anything
 
