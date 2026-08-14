@@ -44,7 +44,7 @@ properties:
                   - name: COSMOS_KEY
                     secretRef: cosmos-key
                   - name: COSMOS_ENDPOINT
-                    secretRef: cosmos-enpoint
+                    secretRef: cosmos-endpoint
         scale:
           minReplicas: 2
           maxReplicas: 3
