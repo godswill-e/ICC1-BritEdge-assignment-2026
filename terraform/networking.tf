@@ -3,6 +3,10 @@ resource "azurerm_virtual_network" "container_vnet" {
   address_space = ["10.0.0.0/16"]
   location = var.location-2
   resource_group_name = azurerm_resource_group.web_app_rg.name
+  tags = {
+    "Environment" = "Dev"
+    "Service"     = "Container App Virtual Network"
+  }
 }
 
 resource "azurerm_subnet" "container_subnet"{

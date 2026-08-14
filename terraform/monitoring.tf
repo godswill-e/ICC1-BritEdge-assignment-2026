@@ -55,6 +55,10 @@ resource "azurerm_monitor_action_group" "monitor_action" {
     name          = "ada_email_reciever"
     email_address = var.user_email
   }
+  tags = {
+    "Environment" = "Dev"
+    "Service"     = "Azure Monitor Action Group"
+  }
 }
 
 resource "azurerm_monitor_metric_alert" "container_app_cpu_allert" {
@@ -77,5 +81,10 @@ resource "azurerm_monitor_metric_alert" "container_app_cpu_allert" {
 
   action {
     action_group_id = azurerm_monitor_action_group.monitor_action.id
+  }
+
+  tags = {
+    "Environment" = "Dev"
+    "Service"     = "Azure Monitor Alert"
   }
 }
