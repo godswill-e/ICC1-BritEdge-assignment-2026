@@ -54,14 +54,14 @@ resource "azurerm_key_vault_access_policy" "container_identity" {
   object_id = azurerm_user_assigned_identity.container_identity.principal_id
 
   key_permissions = [
-    "Get",
+    "Get"
   ]
 
   secret_permissions = [
-    "Get",
+    "Get"
   ]
 
   storage_permissions = [
-    "Get",
+    "Get"
   ]
 }
